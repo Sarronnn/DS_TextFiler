@@ -35,7 +35,7 @@ public class TernaryTreeTextFiller implements TextFiller {
     }
 
     public boolean empty () {
-        if (root != null) {
+        if (size == 0) {
         	return true;
         }else {
         	return false;
@@ -68,14 +68,7 @@ public class TernaryTreeTextFiller implements TextFiller {
     
     // Private Helper Methods
     // -----------------------------------------------------------
-
-    /**
-     * maybe convert to array list??
-     * @param add
-     */
    
-    	// What if root is not empty?? We compare the first character of the new word with that of root and decide where is goes
-    	
     	
     /**
      * Normalizes a term to either add or search for in the tree,
@@ -109,6 +102,9 @@ public class TernaryTreeTextFiller implements TextFiller {
     }
     
     // [!] Add your own helper methods here!
+ // Question for office hours: What if root is not empty?? We compare the first character of the new word with that of root and
+ //decide where is goes
+	
     /**
      * @param node is the current node
      * @return the size of the node
@@ -152,6 +148,7 @@ public class TernaryTreeTextFiller implements TextFiller {
         word += node.letter;
         return node.wordEnd ? word : suffix(node.mid, word);
     }
+    
     /**
      * Adds new word 
      * @param toAdd is the new word to be added
@@ -163,6 +160,7 @@ public class TernaryTreeTextFiller implements TextFiller {
             this.root = this.add(this.root, toAdd, queue);
         }
     }
+    
     /**
      * Adds a word to our tree
      * @param node is the current node
@@ -170,8 +168,6 @@ public class TernaryTreeTextFiller implements TextFiller {
      * @param queue is the order of where to add the new term
      * @return the new node with the added word
      */
-
-
     private TTNode add(TTNode node, String toAdd, int queue) {
         if (node == null) {
             return toAddSuffix(node, toAdd, queue);
@@ -194,8 +190,6 @@ public class TernaryTreeTextFiller implements TextFiller {
         }
         return node;
     }
-
-
 
 
     /**
@@ -223,10 +217,12 @@ public class TernaryTreeTextFiller implements TextFiller {
         }
     }
  
+    
     public String returnFullword(String word) {
         return this.fullWord(this.root, normalizeTerm(word), "");
     }
 
+    
     /**
      * Collects the suffix 
      * @param node the current node
@@ -257,6 +253,8 @@ public class TernaryTreeTextFiller implements TextFiller {
         }
         return word + node.letter;
     }
+    
+    
    /**
     *  Adds the suffix following the middle path
     * @param node is the current node
@@ -276,6 +274,8 @@ public class TernaryTreeTextFiller implements TextFiller {
         }
         return node;
     }
+    
+    
     private boolean contains(TTNode node, String word) {
         if (node == null) {
             return false;
@@ -294,6 +294,8 @@ public class TernaryTreeTextFiller implements TextFiller {
             return contains(node.left, word);
         }
     }
+    
+    
     /**
      * Adds all terms into an array list
      * @param node is the current node
@@ -335,7 +337,7 @@ public class TernaryTreeTextFiller implements TextFiller {
         char letter;
         TTNode left, mid, right;
         int queue;
-        char data:
+        
         
         /**
          * Constructs a new TTNode containing the given character
