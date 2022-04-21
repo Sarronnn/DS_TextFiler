@@ -109,49 +109,72 @@ public class TernaryTreeTextFiller implements TextFiller {
     }
     
     // [!] Add your own helper methods here!
+    /**
+     * @param node is the current node
+     * @return the size of the node
+     */
     private int getSize(TTNode node) {
     	return size;
     }
-    
-    private String textFill(TTNode node, String word, String other) {
+    /**
+     * 
+     * @param node is the current node
+     * @param prefix is the prefix to search for
+     * @param other a string that contains the other parts of the word
+     * @return string with prefix as its prefix
+     */
+    private String textFill(TTNode node, String prefix, String other) {
         if (node == null) {
             return null;
         }
-        int compare = compareChars(word.charAt(0), node.letter);
+        int compare = compareChars(prefix.charAt(0), node.letter);
         if (compare == 0) {
-            if (word.length() == 1) {
+            if (prefix.length() == 1) {
                 return suffix(node, other);
             }
             other += node.letter;
-            return textFill(node.mid, word.substring(1), other);
+            return textFill(node.mid, prefix.substring(1), other);
         } 
         else if (compare > 0) {
-            return textFill(node.right, word, other);
+            return textFill(node.right, prefix, other);
         } 
         else {
-            return textFill(node.left, word, other);
+            return textFill(node.left, prefix, other);
         }
     }
-
+    /**
+     * Collects the suffixes
+     * @param node is the current node
+     * @param word is a string with the already collected letters
+     * @return String with the collected letters
+     */
     private String suffix(TTNode node, String word) {
         word += node.letter;
         return node.wordEnd ? word : suffix(node.mid, word);
     }
-
-    public void add(String toAdd, int priority) {
+    /**
+     * Adds new word 
+     * @param toAdd is the new word to be added
+     * @param queue is the order of where to add the new term 
+     */
+    public void add(String toAdd, int queue) {
         toAdd = normalizeTerm(toAdd);
         if (!this.contains(toAdd)) {
-            this.root = this.add(this.root, toAdd, priority);
+            this.root = this.add(this.root, toAdd, queue);
         }
     }
-    
-    public String fullWord(String word) {
-        return this.fullWord(this.root, normalizeTerm(word), "");
-    }
+    /**
+     * Adds a word to our tree
+     * @param node is the current node
+     * @param toAdd is the term to be added
+     * @param queue is the order of where to add the new term
+     * @return the new node with the added word
+     */
+
 
     private TTNode add(TTNode node, String toAdd, int queue) {
         if (node == null) {
-            return addSuffix(node, toAdd, queue);
+            return toAddSuffix(node, toAdd, queue);
         }
         int compare = compareChars(toAdd.charAt(0), node.letter);
         if (compare == 0) {
@@ -176,14 +199,11 @@ public class TernaryTreeTextFiller implements TextFiller {
 
 
     /**
-     * Recursively searches the tree for the highest priority String
-     * that contains the incoming term as a prefix
-     * 
-     * @param n the current node
-     * @param query the prefix to search for
-     * @param str the current String that contains the already collected letters
-     * 
-     * @return the highest priority String that contains query as a prefix, null if no such term exists
+     * Searches tree for prefix
+     * @param node the current node
+     * @param word the prefix to search 
+     * @param other the  second part of the word. 
+     * @return the word that contains word as its prefix. 
      */
     private String fullWord(TTNode node, String word, String other) {
         if (node == null) {
@@ -202,14 +222,15 @@ public class TernaryTreeTextFiller implements TextFiller {
             return fullWord(node.mid, word.substring(1), other);
         }
     }
+ 
+    public String returnFullword(String word) {
+        return this.fullWord(this.root, normalizeTerm(word), "");
+    }
 
     /**
-     * Recursively collects suffix with highest priority starting at incoming node
-     * 
-     * @param n the current node
-     * @param str the current String that contains already collected letters
-     * @param priority the highest priority encountered so far
-     * 
+     * Collects the suffix 
+     * @param node the current node
+     * @param word the String that contains already collected letters
      * @return a String that contains term with highest priority
      */
     private String suffix(TTNode node, String word, int queue) {
@@ -236,8 +257,14 @@ public class TernaryTreeTextFiller implements TextFiller {
         }
         return word + node.letter;
     }
-    
-    private TTNode addSuffix(TTNode node, String suffix, int queue) {
+   /**
+    *  Adds the suffix following the middle path
+    * @param node is the current node
+    * @param suffix is the new suffix we want to add
+    * @param queue is the order of where to add the new term
+    * @return the node with the new suffix
+    */
+    private TTNode toAddSuffix(TTNode node, String suffix, int queue) {
         if (suffix.length() <= 0) {
             return null;
         }
@@ -245,7 +272,7 @@ public class TernaryTreeTextFiller implements TextFiller {
         if (suffix.length() == 1) {
             this.size++;
         } else {
-            node.mid = addSuffix(node.mid, suffix.substring(1), queue);
+            node.mid = toAddSuffix(node.mid, suffix.substring(1), queue);
         }
         return node;
     }
@@ -267,6 +294,12 @@ public class TernaryTreeTextFiller implements TextFiller {
             return contains(node.left, word);
         }
     }
+    /**
+     * Adds all terms into an array list
+     * @param node is the current node
+     * @param word is the current word
+     * @param collect is a list of all the collected words
+     */
     private void getSortedList(TTNode node, String word, ArrayList<String> collect) {
         if (node.left != null) {
             getSortedList(node.left, word, collect);
@@ -302,6 +335,7 @@ public class TernaryTreeTextFiller implements TextFiller {
         char letter;
         TTNode left, mid, right;
         int queue;
+        char data:
         
         /**
          * Constructs a new TTNode containing the given character
